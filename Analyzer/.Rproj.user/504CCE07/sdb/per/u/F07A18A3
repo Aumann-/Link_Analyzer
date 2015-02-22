@@ -1,0 +1,17 @@
+{
+    "contents" : "\n\ntest <- function(){\n  \"Testing\"\n}\n\n#not currently working\nget_filename <- function(){\n  theFile <- readline(\"Enter the filename (*.csv): \")\n  return (theFile)\n}\n\n#reads data in from csv to data.frame\nreadin <- function(){\n  theFile <- \"E:\\\\Capstone\\\\Current_Program\\\\Converter\\\\duplicates.csv\"\n  data <- read.table(file = theFile, header = TRUE, sep=\",\")\n  return (data)\n}",
+    "created" : 1424211248693.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "2912943924",
+    "id" : "F07A18A3",
+    "lastKnownWriteTime" : 32651513914720368,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
