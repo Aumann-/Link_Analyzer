@@ -1,0 +1,16 @@
+{
+    "contents" : "require(igraph)\nrequire(zoo)\n\n#reads data in from csv to data.frame\nreadin <- function()\n{\n  #theFile <- \"I:\\\\Capstone\\\\Current_Program\\\\Converter\\\\test.csv\"\n  theFile <- \"E:\\\\Capstone\\\\Current_Program\\\\Crawler\\\\Link_data\\\\nsuok.edu\\\\nsuok.csv\"\n  data <- read.table(file = theFile, sep=\",\", header=FALSE, fill=TRUE)\n  return (data)\n}\n\nplot_chart <- function(data)\n{\n  #replaces each NA with the most recent non-NA\n  data[1:ncol(data)] <- sapply(data[1:ncol(data)], na.locf, na.rm=FALSE)\n  #remove any remaining NA\n  data <- na.omit(data)\n  \n  #combine data by columns\n  edges <- rbind(data[1:2], setNames(data[2:3], names(data[1:2])))\n  \n  #generate base chart of data\n  chart <- graph.data.frame(edges)\n  \n  #remove curved lines from graph\n  E(chart)$curved <- 0\n  \n  #plot data as tree\n  #vertex.size sets size of points at each vertexc(set to 0 to avoid overlapping text)\n  #edge.arrow.size sets size of arrow leading to each point(set to 0 for readability)\n  #layout set to -(reingold.tilford) for right facing tree\n  win.graph(150,100,8)\n  \n  plot.igraph(chart, vertex.size = 0, edge.arrow.size = 0, layout = -layout.reingold.tilford(chart)[,2:1])\n}\n\ntest <- function()\n{\n  t <- readin()\n  plot_chart(t)\n}",
+    "created" : 1424975038174.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1460024804",
+    "id" : "D13985C7",
+    "lastKnownWriteTime" : 1424975292,
+    "path" : "E:/Capstone/Current_Program/Analyzer/Analyzer/R/tree_gen_test.R",
+    "project_path" : "R/tree_gen_test.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
