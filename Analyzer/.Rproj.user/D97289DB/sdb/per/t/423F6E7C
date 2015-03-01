@@ -1,0 +1,17 @@
+{
+    "contents" : "require(TeachingDemos)\nrequire(igraph)\nrequire(zoo)\nrequire(rgl)\nrequire(rglPlotCustom)\n\n#reads data in from csv to data.frame\nreadin <- function(c)\n{\n  if(as.numeric(c) == 1)\n  {\n    theFile <- \"I:\\\\Capstone\\\\Current_Program\\\\Crawler\\\\Link_data\\\\nsuok.edu\\\\nsuok.csv\"\n    data <- read.table(file = theFile, sep=\",\", header=FALSE, fill=TRUE)\n  }\n  \n  if(as.numeric(c) == 2)\n  {\n  theFile <- \"I:\\\\Capstone\\\\Current_Program\\\\Crawler\\\\Link_data\\\\nsuok.edu\\\\duplicates.csv\"\n  data <- read.table(file = theFile, header = TRUE, sep=\",\")\n  }\n  \n  return (data)\n}\n\nplot_dup <- function(t)\n{\n  #open graph window\n  win.graph(40,25,8)\n  #change margins for plot (bottom, left, top, right)\n  #defaults= 5.1, 4.1, 4.1, 2.1\n  par(mar=c(5.1,4,4.1,2))\n  #generate plot with interactive points for info\n  HWidentify(t$Link, t$Occurrence, label = paste(t$Link, \"-\", t$Occurrence), main=\"Link Occurrences\",\n             sub=paste(nrow(t), \" Links\"), xlab = \"Mouseover for Link\",\n             ylab = \"Occurrence\", clean=TRUE,\n             adj=c(0.5, 3), xaxt=\"n\")\n  #After right clicking to escape window, generates trail lines from points for ID\n  lines(t$Link, t$Occurrence, type=\"h\", lwd = 2)\n}\n\nplot_crawled <- function(data)\n{\n  #replaces each NA with the most recent non-NA\n  data[1:ncol(data)] <- sapply(data[1:ncol(data)], na.locf, na.rm=FALSE)\n  #remove any remaining NA\n  data <- na.omit(data)\n  \n  #combine data by columns\n  edges <- rbind(data[1:2], setNames(data[2:3], names(data[1:2])))\n  \n  #generate base chart of data\n  chart <- graph.data.frame(edges)\n  \n  #remove curved lines from graph\n  E(chart)$curved <- 0\n  \n  #win.graph(150,100,4)\n  \n  #plot data as 3D tree\n  #vertex.size sets size of points at each vertex (set to 0 to avoid overlapping text)\n  #edge.arrow.size sets size of arrow leading to each point(set to 0 for readability)\n  #layout set to \"PENDING\"\n  #asp set to 0 so model will cover entire window\n  rglplot2(chart, vertex.size = 0, vertex.label.cex=0.6,#vertex.label=NA,\n           edge.arrow.size = 0, edge.width = 0.25,\n           layout = layout.fruchterman.reingold(chart, dim=3),\n           asp = 0)  \n}\n\ntest <- function()\n{\n  print(\"1. Crawled file.\")\n  print(\"2. Duplicates/tocrawl file.\")\n  c <- readline(\"Choice: \")\n  \n  a <- readin(c)\n  \n  if(as.numeric(c) == 1)\n  {\n    plot_crawled(a)\n  }\n  \n  if(as.numeric(c) == 2)\n  {\n    plot_dup(a)\n  }\n  \n}",
+    "created" : 1425237877948.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2717207851",
+    "id" : "423F6E7C",
+    "lastKnownWriteTime" : 1425238696,
+    "path" : "I:/Capstone/Current_Program/Analyzer/Analyzer/R/Analyzer_v1.R",
+    "project_path" : "R/Analyzer_v1.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

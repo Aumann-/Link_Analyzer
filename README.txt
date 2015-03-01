@@ -5,18 +5,18 @@ Requires rglPlotCustom package.
 
 If using RStudio:
 
-To use each feature, you must currently open the file you want, set the filepath in read() to your file, and push to source. Then type test() into the R console.
+Load Analyzer_v1.R, push to source, and run test() in the R console.
 
 
 
 
 Current Features:
 
-Analyzer_dups.R:
+plot_dups():
 
 Takes in a csv file for duplicates/tocrawl file types, read data into a data.frame, and generates an interactive scatterplot from the data. The plot is opened in a windows graph area so the analyzer will currently only function in Windows OS. Each point on the plot is interactive in that mousing over the point will give the link name and how man y times it occurred in the file.
 
 
-tree_gen_test.R:
+plot_crawled():
 
 Takes in a crawled links file, reads the data into a data.frame, and cleans the data into a good format to generate a tree from. Once cleaning is complete, the links are plotted on a 3D layout. The generated tree can be panned, rotated, and zoomed using the mouse.
