@@ -1,0 +1,17 @@
+{
+    "contents" : "require(shiny)\n\nshinyUI(fluidPage\n        (\n          titlePanel(\"Test\"),\n          \n          sidebarLayout\n          (\n            sidebarPanel\n            (\n              fluidRow\n              (\n                fileInput(\"file\", label = h3(\"Choose File\"), multiple = FALSE)  \n              ),\n              \n              fluidRow\n              (\n                radioButtons(\"fileType\", label = h3(\"File Type\"),\n                             choices = list(\"Crawled\",\n                                            \"Duplicates\",\n                                            \"Tocrawl\"),\n                             selected = \"Crawled\")\n              ),\n              \n              fluidRow\n              (\n                sliderInput(\"fontSize\",\n                            label = \"Crawled Font Multiplier\",\n                            min = 0.1, max = 2, value = c(1))\n              ),\n              fluidRow\n              (\n                actionButton(\"submit\", label = \"Submit\")\n              )\n            ),\n            \n            mainPanel\n            (\n              fluidRow\n              (\n                textOutput(\"test\")  \n              ),\n              fluidRow\n              (\n                tableOutput(\"contents\")\n              )\n            )\n          )\n        ))",
+    "created" : 1425523508657.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1472057522",
+    "id" : "55EB941A",
+    "lastKnownWriteTime" : 1425527318,
+    "path" : "I:/Capstone/Current_Program/Analyzer/Analyzer/R/ui.R",
+    "project_path" : "R/ui.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
