@@ -6,7 +6,28 @@ require(rgl)
 require(rglPlotCustom)
 
 shinyServer(function(input, output){ 
-
+  
+  #function to export tree as PNG after rendering as an image
+  observe({
+    if (input$exportPNG == 0)
+    {
+      return()
+    }
+    
+    rgl.snapshot("tree.png", "png", top = TRUE)
+  })
+  
+  #function to export as OBJ
+  observe({
+    if (input$exportOBJ == 0)
+    {
+      return()
+    }
+    
+    writeOBJ("tree.obj")
+  })
+  
+  #function to generate tree and display data in table
   output$contents <- renderTable({
     input$submit #set dependency on submit button
     mydata = NULL
@@ -17,11 +38,11 @@ shinyServer(function(input, output){
     
       if (is.null(theFile)) #check if file is null
       {
-        mydata <- NULL
+        mydata <- NULL        
       } else
       {
         #determine how to read file based on radio buttons
-      switch(input$fileType,
+        switch(input$fileType,
              "Crawled" = (mydata <- read.table(file = theFile$datapath, sep=",", header=FALSE, fill=TRUE)),
              "Duplicates" = (mydata <- read.table(file = theFile$datapath, header = TRUE, sep=",")),
              "Tocrawl" = (mydata <- read.table(file = theFile$datapath, header = TRUE, sep=",")))
@@ -35,7 +56,7 @@ shinyServer(function(input, output){
       {
         #if pressed, check which function to call
         switch(input$fileType,
-               "Crawled" = plot_crawled(mydata, input$fontSize),
+               "Crawled" = plot_crawled(mydata, input$fontSize, input$displayLabel),
                "Duplicates" = plot_dup(mydata),
                "Tocrawl" = plot_dup(mydata),
                NULL)
@@ -58,12 +79,13 @@ shinyServer(function(input, output){
                sub=paste(nrow(mydata), " Links"), xlab = "Mouseover for Link",
                ylab = "Occurrence", clean=TRUE,
                adj=c(0.5, 3), xaxt="n")
-    #After right clicking to escape window, generates trail lines from points for ID
-    lines(mydata$Link, mydata$Occurrence, type="h", lwd = 2)
+    
+    #Current test to wite plot to saved image
+    #dev.copy(jpeg, filename="I:\\test.jpg")
   }
   
   #function to generate 3D tree for crawled files
-  plot_crawled <- function(mydata, size)
+  plot_crawled <- function(mydata, size, displayLabel)
   {
     #replaces each NA with the most recent non-NA
     mydata[1:ncol(mydata)] <- sapply(mydata[1:ncol(mydata)], na.locf, na.rm=FALSE)
@@ -83,14 +105,25 @@ shinyServer(function(input, output){
     #vertex.size sets size of points at each vertex (set to 0 to avoid overlapping text)
     #edge.arrow.size sets size of arrow leading to each point(set to 0 for readability)
     #vertex.label.cex sets font size of vertex labels
+    #vertex.label=NA disables showing of vertex labels
     #layout set to fruchterman.reingold for 3D spherical tree
     #asp set to 0 so model will cover entire window
-    rglplot2(chart, vertex.size = 0, 
-             #vertex.label=NA, 
+    #if displayLabel checkbox is checked, show labels using size from sliders
+    if(displayLabel == TRUE)
+    {
+    rglplot2(chart, vertex.size = 0,  
              vertex.label.cex=size,
              edge.arrow.size = 0, edge.width = 0.25,
              layout = layout.fruchterman.reingold(chart, dim=3),
-             asp = 0)  
+             asp = 0)
+    } else #if unchecked, don't display labels
+    {
+      rglplot2(chart, vertex.size = 2, 
+               vertex.label=NA, 
+               edge.arrow.size = 0, edge.width = 0.5,
+               layout = layout.fruchterman.reingold(chart, dim=3),
+               asp = 0) 
+    }
   }
   
 })

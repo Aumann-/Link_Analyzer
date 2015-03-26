@@ -2,7 +2,7 @@ require(shiny)
 
 shinyUI(fluidPage
         (
-          titlePanel("Test"),
+          titlePanel("Link Analyzer"),
           
           sidebarLayout
           (
@@ -19,27 +19,54 @@ shinyUI(fluidPage
                              choices = list("Crawled",
                                             "Duplicates",
                                             "Tocrawl"),
-                             selected = "Crawled")
+                             selected = 0)
               ),
               
-              fluidRow
-              (
-                sliderInput("fontSize",
-                            label = "Crawled Font Multiplier",
-                            min = 0.1, max = 2, value = c(1))
+              conditionalPanel(
+                condition = "input.fileType == 'Crawled'",
+                
+                h3("Crawled File Options"),
+                #helpText("These options are only used when working with a crawled file type."),
+                br(),
+                
+                fluidRow
+                (
+                    checkboxInput("displayLabel", label = "Display Vertex Labels", value = TRUE)
+                ),
+                
+                fluidRow
+                (
+                  sliderInput("fontSize",
+                              label = "Crawled Font Multiplier",
+                              min = 0.1, max = 2, value = c(1)),
+                  helpText("Only changes if 'Display Vertex Labels' is checked.")
+                )
               ),
               fluidRow
               (
                 actionButton("submit", label = "Submit")
+              ),
+              conditionalPanel(
+                condition = "input.fileType == 'Crawled'",
+                
+                fluidRow
+                (
+                  actionButton("exportPNG", label = "Export as .PNG"),
+                  helpText("Export the currently open 3D model as a 2D .PNG image file.")
+                ),
+                fluidRow
+                (
+                  actionButton("exportOBJ", label = "Export as .OBJ"),
+                  helpText("Export the currently open 3D model as a .OBJ model file.
+                           *This feature takes a long time to complete.
+                           Please do not close the render window or the application for a minimum of 3 minutes.")
+                )
+                
               )
             ),
             
             mainPanel
-            (
-              fluidRow
-              (
-                textOutput("test")  
-              ),
+            (              
               fluidRow
               (
                 tableOutput("contents")
