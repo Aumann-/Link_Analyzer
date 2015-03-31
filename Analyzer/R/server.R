@@ -88,12 +88,22 @@ shinyServer(function(input, output){
   plot_crawled <- function(mydata, size, displayLabel)
   {
     #replaces each NA with the most recent non-NA
-    mydata[1:ncol(mydata)] <- sapply(mydata[1:ncol(mydata)], na.locf, na.rm=FALSE)
-    #remove any remaining NA
-    mydata <- na.omit(mydata)
+    mydata[1] <- na.locf(mydata[1], na.rm=FALSE)
     
+    #remove any remaining NA
+    for(i in ncol(mydata):2)
+    {
+      mydata[[i-1]] <- ifelse(!is.na(mydata[[i]]), na.locf(mydata[[i-1]], na.rm=FALSE),
+                              mydata[[i-1]])
+    }
+
     #combine mydata by columns
-    edges <- rbind(mydata[1:2], setNames(mydata[2:3], names(mydata[1:2])))
+    edges <- rbind(na.omit(mydata[1:2]), 
+                   do.call('rbind', 
+                           lapply(1:(ncol(mydata)-2), function(i)
+                             na.omit(setNames(mydata[(1+i):(2+i)],
+                                              names(mydata[1:2])))))
+    )
     
     #generate base chart of mydata
     chart <- graph.data.frame(edges)
@@ -111,14 +121,16 @@ shinyServer(function(input, output){
     #if displayLabel checkbox is checked, show labels using size from sliders
     if(displayLabel == TRUE)
     {
-    rglplot2(chart, vertex.size = 0,  
-             vertex.label.cex=size,
-             edge.arrow.size = 0, edge.width = 0.25,
-             layout = layout.fruchterman.reingold(chart, dim=3),
-             asp = 0)
+      rglplot2(chart, 
+              vertex.size = 0,  
+              vertex.label.cex=size,
+              edge.arrow.size = 0, edge.width = 0.25,
+              layout = layout.fruchterman.reingold(chart, dim=3),
+              asp = 0)
     } else #if unchecked, don't display labels
     {
-      rglplot2(chart, vertex.size = 2, 
+      rglplot2(chart, 
+               vertex.size = 2, 
                vertex.label=NA, 
                edge.arrow.size = 0, edge.width = 0.5,
                layout = layout.fruchterman.reingold(chart, dim=3),
