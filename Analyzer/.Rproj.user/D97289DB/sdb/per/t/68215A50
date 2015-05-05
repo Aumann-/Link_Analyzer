@@ -1,0 +1,17 @@
+{
+    "contents" : "require(shiny)\n\nshinyUI(fluidPage\n        (\n          titlePanel(\"Link Analyzer\"),\n          \n          sidebarLayout\n          (\n            sidebarPanel\n            (\n              fluidRow\n              (\n                fileInput(\"file\", label = h3(\"Choose File\"), multiple = FALSE), \n                helpText(\"Files are limited to 5MB.\")\n              ),\n              \n              fluidRow\n              (\n                radioButtons(\"fileType\", label = h3(\"File Type\"),\n                             choices = list(\"Crawled\",\n                                            \"Duplicates\",\n                                            \"Tocrawl\"),\n                             selected = 0)\n              ),\n              \n              conditionalPanel(\n                condition = \"input.fileType == 'Crawled'\",\n                \n                h3(\"Crawled File Options\"),\n                #helpText(\"These options are only used when working with a crawled file type.\"),\n                br(),\n                \n                fluidRow\n                (\n                    checkboxInput(\"displayLabel\", label = \"Display Vertex Labels\", value = TRUE)\n                ),\n                \n                fluidRow\n                (\n                  sliderInput(\"fontSize\",\n                              label = \"Crawled Font Multiplier\",\n                              min = 0.1, max = 2, value = c(1)),\n                  helpText(\"Only changes if 'Display Vertex Labels' is checked.\")\n                )\n              ),\n              fluidRow\n              (\n                actionButton(\"submit\", label = \"Submit\")\n              ),\n              fluidRow\n              (\n                actionButton(\"reset\", label = \"Reset Graphics Devices\"),\n                helpText(\"Use to reset the graphics devices after rendering a plot.\")\n              ),\n              conditionalPanel(\n                condition = \"input.fileType == 'Crawled'\",\n                \n                fluidRow\n                (\n                  actionButton(\"exportPNG\", label = \"Export as .PNG\"),\n                  helpText(\"Export the currently open 3D model as a 2D .PNG image file.\")\n                ),\n                fluidRow\n                (\n                  actionButton(\"exportOBJ\", label = \"Export as .STL\"),\n                  helpText(\"Export the currently open 3D model as a .STL model file.\n                           *This feature takes a long time to complete.\n                           Please do not close the render window or the application for a minimum of 5 minutes.\")\n                )\n                \n              )\n            ),\n            \n            mainPanel\n            (     \n              fluidRow\n              (\n                tableOutput(\"contents\")\n              )\n            )\n          )\n        ))",
+    "created" : 1429712275624.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3874133843",
+    "id" : "68215A50",
+    "lastKnownWriteTime" : 1429712286,
+    "path" : "I:/Capstone/Current_Program/Analyzer/Analyzer/R/ui.R",
+    "project_path" : "R/ui.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

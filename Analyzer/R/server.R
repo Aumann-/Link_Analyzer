@@ -4,9 +4,9 @@ require(igraph)
 require(zoo)
 require(rgl)
 require(rglPlotCustom)
+options(shiny.maxRequestSize=5*1024^2)
 
 shinyServer(function(input, output){ 
-  
   #function to export tree as PNG after rendering as an image
   observe({
     if (input$exportPNG == 0)
@@ -24,7 +24,18 @@ shinyServer(function(input, output){
       return()
     }
     
-    writeOBJ("tree.obj")
+    writeSTL("tree.stl")
+    #writeOBJ("tree.obj")
+  })
+  
+  #function to reset graphics devices
+  observe({
+    if (input$reset == 0)
+    {
+      return()
+    }
+    
+    graphics.off()
   })
   
   #function to generate tree and display data in table
@@ -33,6 +44,7 @@ shinyServer(function(input, output){
     mydata = NULL
     
     isolate({
+      theFile <- NULL
       theFile <- input$file #get file info from input
       mydata <- NULL
     
@@ -62,7 +74,7 @@ shinyServer(function(input, output){
                NULL)
       } #close else
       
-      mydata
+      #mydata
     }) #close isolate  
   }) #close renderTable
   
@@ -130,9 +142,9 @@ shinyServer(function(input, output){
     } else #if unchecked, don't display labels
     {
       rglplot2(chart, 
-               vertex.size = 2, 
+               vertex.size = 3, 
                vertex.label=NA, 
-               edge.arrow.size = 0, edge.width = 0.5,
+               edge.arrow.size = 0, edge.width = 3,
                layout = layout.fruchterman.reingold(chart, dim=3),
                asp = 0) 
     }
