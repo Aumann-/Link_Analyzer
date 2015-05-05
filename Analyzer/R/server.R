@@ -87,6 +87,7 @@ shinyServer(function(input, output){
     #defaults= 5.1, 4.1, 4.1, 2.1
     par(mar=c(5.1,4,4.1,2))
     #generate plot with interactive points for info
+	#points will diplay link name and occurrence number
     HWidentify(mydata$Link, mydata$Occurrence, label = paste(mydata$Link, "-", mydata$Occurrence), main="Link Occurrences",
                sub=paste(nrow(mydata), " Links"), xlab = "Mouseover for Link",
                ylab = "Occurrence", clean=TRUE,
@@ -99,10 +100,10 @@ shinyServer(function(input, output){
   #function to generate 3D tree for crawled files
   plot_crawled <- function(mydata, size, displayLabel)
   {
-    #replaces each NA with the most recent non-NA
+    #replaces each NA in first column with origin link
     mydata[1] <- na.locf(mydata[1], na.rm=FALSE)
     
-    #remove any remaining NA
+    #remove any remaining NA by replacing with most recent non-NA
     for(i in ncol(mydata):2)
     {
       mydata[[i-1]] <- ifelse(!is.na(mydata[[i]]), na.locf(mydata[[i-1]], na.rm=FALSE),
@@ -130,6 +131,7 @@ shinyServer(function(input, output){
     #vertex.label=NA disables showing of vertex labels
     #layout set to fruchterman.reingold for 3D spherical tree
     #asp set to 0 so model will cover entire window
+	
     #if displayLabel checkbox is checked, show labels using size from sliders
     if(displayLabel == TRUE)
     {
