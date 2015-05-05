@@ -10,7 +10,8 @@ shinyUI(fluidPage
             (
               fluidRow
               (
-                fileInput("file", label = h3("Choose File"), multiple = FALSE)  
+                fileInput("file", label = h3("Choose File"), multiple = FALSE), 
+                helpText("Files are limited to 5MB.")
               ),
               
               fluidRow
@@ -46,6 +47,11 @@ shinyUI(fluidPage
               (
                 actionButton("submit", label = "Submit")
               ),
+              fluidRow
+              (
+                actionButton("reset", label = "Reset Graphics Devices"),
+                helpText("Use to reset the graphics devices after rendering a plot.")
+              ),
               conditionalPanel(
                 condition = "input.fileType == 'Crawled'",
                 
@@ -56,17 +62,17 @@ shinyUI(fluidPage
                 ),
                 fluidRow
                 (
-                  actionButton("exportOBJ", label = "Export as .OBJ"),
-                  helpText("Export the currently open 3D model as a .OBJ model file.
+                  actionButton("exportOBJ", label = "Export as .STL"),
+                  helpText("Export the currently open 3D model as a .STL model file.
                            *This feature takes a long time to complete.
-                           Please do not close the render window or the application for a minimum of 3 minutes.")
+                           Please do not close the render window or the application for a minimum of 5 minutes.")
                 )
                 
               )
             ),
             
             mainPanel
-            (              
+            (     
               fluidRow
               (
                 tableOutput("contents")
